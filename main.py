@@ -24,4 +24,4 @@ if __name__ == "__main__":
             assert(item in playerColours) # PLAYER COLOUR NOT RECOGNISED
     print("setting up game")
 
-    gameLoop = TicketToRideGame()
+    game = TicketToRideGame(sys.argv[1:])
