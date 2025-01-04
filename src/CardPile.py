@@ -1,4 +1,3 @@
-from Card import Card
 from collections import deque
 
 class CardPile(deque):
