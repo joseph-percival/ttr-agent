@@ -1,8 +1,8 @@
 # Board
-from Enums import ConnectionType, City, CardColour, CardType
-from Connection import Connection
-from Card import Card
-from CardPile import CardPile
+from src.Enums import ConnectionType, City, CardColour, CardType
+from src.Connection import Connection
+from src.Card import Card
+from src.CardPile import CardPile
 
 class Board:
     def __init__(self):
