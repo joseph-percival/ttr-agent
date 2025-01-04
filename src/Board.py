@@ -125,7 +125,7 @@ class Board:
         self.trainDiscard = CardPile()
         self.routeDiscard = CardPile()
 
-        self.trainHand = CardPile()
+        self.trainPool = CardPile()
 
         self.routePile = CardPile(startPile=[
             Card(cardType=CardType.SHORT_ROUTE, vertices=(City.ATHINA, City.ANGORA), cardPoints= 5),
