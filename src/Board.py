@@ -190,5 +190,5 @@ class Board:
             *([Card(cardType=CardType.TRAIN, cardColour=CardColour.PINK) for _ in range(12)])
         ])
 
+        # city:(playerColour,connectingCity)
         self.placedStations = {}
-

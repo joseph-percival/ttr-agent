@@ -1,6 +1,6 @@
 from enum import Enum
 
-class PlayerColor(Enum):
+class PlayerColour(Enum):
     RED = 0
     GREEN = 1
     BLUE = 2
@@ -28,6 +28,10 @@ class ConnectionType(Enum):
     WILDCARD = 1
     TUNNEL = 2
     FERRY = 3
+
+class PlayerType(Enum):
+    COMPUTER = 0
+    HUMAN = 1
 
 class City(Enum):
     AMSTERDAM = 0
