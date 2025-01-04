@@ -1,4 +1,4 @@
-from Enums import CardColour, PlayerColour, ConnectionType
+from src.Enums import CardColour, PlayerColour, ConnectionType
 
 class Connection:
     def __init__(self, vertices:tuple, length:int, 

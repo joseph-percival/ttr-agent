@@ -1,5 +1,5 @@
-from Enums import PlayerType, PlayerColour
-from CardPile import CardPile
+from src.Enums import PlayerType, PlayerColour
+from src.CardPile import CardPile
 
 class Player:
     def __init__(self, colour:PlayerColour, 

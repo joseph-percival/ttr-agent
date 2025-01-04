@@ -1,4 +1,4 @@
-from Enums import CardType, CardColour
+from src.Enums import CardType, CardColour
 
 class Card:
     def __init__(self, cardType:CardType, 
