@@ -10,7 +10,6 @@ import sys
 # add human players 
 # allowed colours: RED BLUE GREEN YELLOW BLACK
 if __name__ == "__main__":
-    print(sys.argv)
     playerColours = (
         "RED",
         "BLUE",
