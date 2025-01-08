@@ -86,7 +86,8 @@ class TicketToRideGame:
             choice = input(": ")
             match choice:
                 case str() if choice.isdigit() and int(choice) < len(newRoutes):
-                    del newRoutes[int(choice)] # TODO: move to discard pile instead
+                    self.board.routeDiscard.append(newRoutes[int(choice)])
+                    del newRoutes[int(choice)]
                 case "":
                     break
                 case _:
