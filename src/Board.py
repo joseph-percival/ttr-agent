@@ -200,7 +200,7 @@ class Board:
     def drawCards(self, num:int, deck:str):
         out = []
         for _ in range(num):
-            eval(f"out.append(self.{deck}.pop())")
+            eval(f"out.append(self.{deck}.popleft())")
         return out
         # TODO: handle running out of cards
             
