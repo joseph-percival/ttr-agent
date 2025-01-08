@@ -20,23 +20,8 @@ class Player:
                     print(f"{i}: {card.vertices[0].name} to {card.vertices[1].name}: {card.cardPoints} points [LONG ROUTE]")
                 case _:
                     print(f"{i}: {card.vertices[0].name} to {card.vertices[1].name}: {card.cardPoints} points")
+
+    def printTrainCards(self):
+        for i, card in enumerate(self.trainCards):
+            print(f"{i}: {card.cardColour.name} ")
                 
-
-    def chooseRoutes(self, newRoutes:CardPile):
-        print(f"Here are your current routes:")
-        self.printRoutes()
-        choice = None
-
-        while choice != "" and len(newRoutes) > 1:
-            print(f"Discard any of these routes, but keep at least one:")
-            self.printRoutes(cards=newRoutes)
-            print("Type the number of a route you wish to discard, or press enter to skip")
-            choice = input(": ")
-            match choice:
-                case str() if choice.isdigit() and int(choice) < len(newRoutes):
-                    del newRoutes[int(choice)]
-                case "":
-                    break
-                case _:
-                    print("Invalid choice, please enter a valid route number.")
-        self.routeCards.extend(newRoutes)

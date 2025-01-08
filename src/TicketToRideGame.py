@@ -1,6 +1,7 @@
-from src.Enums import PlayerColour, PlayerType
+from src.Enums import PlayerColour, PlayerType, CardColour
 from src.Board import Board
 from src.Player import Player
+from src.CardPile import CardPile
 
 from random import shuffle
 from collections import deque
@@ -24,18 +25,14 @@ class TicketToRideGame:
 
         # distribute starting cards
         for player in self.players:
-            player.routeCards.append(self.board.longRoutePile.pop())
-            newRouteCards = []
-            for _ in range(4):
-                player.trainCards.append(self.board.trainPile.pop())
-            for _ in range(3):
-                newRouteCards.append(self.board.routePile.pop())
+            player.routeCards.extend(self.board.drawCards(1,"longRoutePile"))
+            player.trainCards.extend(self.board.drawCards(4,"trainPile"))
+            newRouteCards = self.board.drawCards(3,"routePile")
 
             print(f"-- {player.colour.name} --")
-            player.chooseRoutes(newRouteCards)
+            self.chooseRoutes(player, newRouteCards)
 
-        for _ in range(5):
-            self.board.trainPool.append(self.board.trainPile.pop())
+        self.board.trainPool.extend(self.board.drawCards(5,"trainPile"))
 
         # game loop
         while self.lowestTrains > 2: # make sure you loop back round at the end
@@ -54,27 +51,75 @@ class TicketToRideGame:
             self.playTurn(player)
 
     def playTurn(self, player:Player):
-        print(f"{player.colour}'s turn: choose an action")
+        print(f"{player.colour.name}'s turn: choose an action")
         choice = ""
         while choice == "":
-            choice = input()
+            choice = input(": ")
             match choice:
                 case "1":
                     # draw train cards
-                    pass
+                    player.printTrainCards()
+                    self.drawTrainCards(player)
                 case "2":
                     # play a route
-                    pass
+                    self.playRoute()
                 case "3":
                     # place a station
-                    pass
+                    self.placeStation()
                 case "4":
                     # draw route cards
-                    newRouteCards = []
-                    for _ in range(3):
-                        newRouteCards.append(self.board.routePile.pop())
-                    player.chooseRoutes(newRouteCards)
+                    newRouteCards = self.board.drawCards(3, "routePile")
+                    self.chooseRoutes(player, newRouteCards)
                 case _:
                     choice = ""
                     print("invalid choice")
+
+    def chooseRoutes(self, player:Player, newRoutes:CardPile):
+        print(f"Here are your current routes:")
+        player.printRoutes()
+        choice = None
+
+        while choice != "" and len(newRoutes) > 1:
+            print(f"Discard any of these routes, but keep at least one:")
+            player.printRoutes(cards=newRoutes)
+            print("Type the number of a route you wish to discard, or press enter to skip")
+            choice = input(": ")
+            match choice:
+                case str() if choice.isdigit() and int(choice) < len(newRoutes):
+                    del newRoutes[int(choice)] # TODO: move to discard pile instead
+                case "":
+                    break
+                case _:
+                    print("Invalid choice, please enter a valid route number.")
+        player.routeCards.extend(newRoutes)
         
+    def drawTrainCards(self, player):
+        print("Choose any two cards from the train pool by typing the corrseponding number")
+        print("Or, type x to select a card from the deck")
+        print("If you choose a locomotive card from the pool you may not draw another card")
+        cards = []
+        while len(cards) < 2:
+            self.board.printTrainPool()
+            print("Type the number of a train you wish to pick, or enter x to draw from the deck")
+            choice = input(": ")
+            match choice:
+                case str() if choice.isdigit() and int(choice) < len(self.board.trainPool):
+                    card = self.board.trainPool[int(choice)]
+                    cards.append(card)
+                    del self.board.trainPool[int(choice)]
+                    # TODO: handle locomotives
+                    # if card.cardType is CardColour.LOCOMOTIVE:
+                    #     break
+                case "x":
+                    cards.extend(self.board.drawCards(1, "trainPile"))
+                case _:
+                    print("Invalid choice, please enter a valid route number.")
+
+        player.trainCards.extend(cards)
+        player.printTrainCards()
+
+    def playRoute(self):
+        pass
+
+    def placeStation(self):
+        pass
