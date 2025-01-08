@@ -12,7 +12,7 @@ class Board:
             Connection((City.EDINBURGH,City.LONDON), 4, colour=CardColour.BLACK, connectionType=ConnectionType.REGULAR),
             Connection((City.LONDON,City.AMSTERDAM), 2, numFerries=2, connectionType=ConnectionType.FERRY),
             Connection((City.LONDON,City.DIEPPE), 2, numFerries=1, connectionType=ConnectionType.FERRY),
-            Connection((City.LONDON,City.DIEPPE), 1, numFerries=1, connectionType=ConnectionType.FERRY),
+            Connection((City.LONDON,City.DIEPPE), 2, numFerries=1, connectionType=ConnectionType.FERRY),
             Connection((City.DIEPPE,City.BREST), 2, colour=CardColour.ORANGE, connectionType=ConnectionType.REGULAR),
             Connection((City.DIEPPE,City.BRUXELLES), 2, colour=CardColour.GREEN, connectionType=ConnectionType.REGULAR),
             Connection((City.DIEPPE,City.PARIS), 1, colour=CardColour.PINK, connectionType=ConnectionType.REGULAR),
@@ -192,3 +192,15 @@ class Board:
 
         # city:(playerColour,connectingCity)
         self.placedStations = {}
+
+    def printTrainPool(self):
+        for i, card in enumerate(self.trainPool):
+            print(f"{i}: {card.cardColour.name} ")
+
+    def drawCards(self, num:int, deck:str):
+        out = []
+        for _ in range(num):
+            eval(f"out.append(self.{deck}.pop())")
+        return out
+        # TODO: handle running out of cards
+            
