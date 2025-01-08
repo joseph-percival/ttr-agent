@@ -6,6 +6,8 @@ from src.CardPile import CardPile
 from random import shuffle
 from collections import deque
 
+import matplotlib.pyplot as plt
+
 class TicketToRideGame:
     def __init__(self, playerList:list=None):
         self.board = Board()
@@ -23,6 +25,7 @@ class TicketToRideGame:
         shuffle(self.board.longRoutePile)
         shuffle(self.board.trainPile)
 
+        self.displayBoard()
         # distribute starting cards
         for player in self.players:
             player.routeCards.extend(self.board.drawCards(1,"longRoutePile"))
@@ -33,7 +36,7 @@ class TicketToRideGame:
             self.chooseRoutes(player, newRouteCards)
 
         self.board.trainPool.extend(self.board.drawCards(5,"trainPile"))
-
+        
         # game loop
         while self.lowestTrains > 2: # make sure you loop back round at the end
             # player at deque 0 makes turn
@@ -41,6 +44,7 @@ class TicketToRideGame:
             for connection in self.board.connections:
                 print(f"{connection.occupiedBy}: {connection.vertices[0].name} to {connection.vertices[1].name}: {connection.length}, {connection.colour}, {connection.connectionType.name}")
             self.playTurn(current)
+            # self.displayBoard()
             # turn of play rotates
             self.players.rotate(-1)
             self.lowestTrains = min(self.lowestTrains, current.numTrains)
@@ -158,3 +162,29 @@ class TicketToRideGame:
                     print("Invalid choice, please enter a valid card colour.")
 
         player.numStations -= 1
+
+    def displayBoard(self):
+        plt.ion()
+        fig, ax = plt.subplots(figsize=(10, 8))
+        ax.set_title("Ticket to Ride Board")
+        ax.set_facecolor("beige")
+        # plot cities
+        for city in City:
+            x, y = city.coordinates
+            ax.scatter(x, y, label=city.name, color='blue')
+            ax.text(x + 0.05, y, city.name, fontsize=9)
+        # plot connections
+        for connection in self.board.connections:
+            x1, y1 = connection.vertices[0].coordinates
+            x2, y2 = connection.vertices[1].coordinates
+            try:
+                ax.plot([x1, x2], [y1, y2], color=connection.colour.name.lower(), linewidth=2)
+            except:
+                ax.plot([x1, x2], [y1, y2], color='gray', linewidth=2)
+        # plot stations
+        for city_name, (player_colour, _) in self.board.placedStations.items():
+            city = City[city_name]
+            x, y = city.coordinates
+            ax.scatter(x, y, color=player_colour.name.lower(), s=100, marker='s')
+        
+        plt.show()
