@@ -1,4 +1,4 @@
-from src.Enums import PlayerColour, PlayerType, CardColour
+from src.Enums import PlayerColour, PlayerType, City
 from src.Board import Board
 from src.Player import Player
 from src.CardPile import CardPile
@@ -65,7 +65,7 @@ class TicketToRideGame:
                     self.playRoute()
                 case "3":
                     # place a station
-                    self.placeStation()
+                    self.placeStation(player)
                 case "4":
                     # draw route cards
                     newRouteCards = self.board.drawCards(3, "routePile")
@@ -115,12 +115,46 @@ class TicketToRideGame:
                     cards.extend(self.board.drawCards(1, "trainPile"))
                 case _:
                     print("Invalid choice, please enter a valid route number.")
-
+        while len(self.board.trainPool) < 5:
+            self.board.trainPool.extend(self.board.drawCards(1,"trainPile"))
         player.trainCards.extend(cards)
         player.printTrainCards()
 
     def playRoute(self):
         pass
 
-    def placeStation(self):
-        pass
+    def placeStation(self, player):
+        print("Type a city name to place a station")
+        print("You cannot choose a city that already has a station attched")
+        print("Type the city name you wish to pick")
+        requiredCards = 4 - player.numStations
+        while True:
+            choice = input(": ")
+            match choice:
+                case str() if choice in City._member_names_ and choice not in self.board.placedStations:
+                    city = choice
+                    # TODO: lookup of destination city
+                    self.board.placedStations[city] = (PlayerColour, destinationCity)
+                    break
+                case _:
+                    print("Invalid choice, please enter a valid city.")
+            
+        print("Select which card(s) you would like to exchange")
+        while True:
+            print("Your current cards: ")
+            player.printTrainCards()
+            print("Colours avaliable to exchange: ")
+            colours = [card.cardColour for card in player.trainCards]
+            colours = set([colour.name for colour in colours if colours.count(colour)>=requiredCards])
+            for i, colour in enumerate(colours):
+                print(f"{i}: {colour}")
+            choice = input(": ")
+            match choice:
+                case str() if choice.isdigit() and int(choice) < len(colours):
+                    colour = colours[int(choice)]
+                    # player.trainCards.remove() TODO: remove cards by colour
+                    break
+                case _:
+                    print("Invalid choice, please enter a valid card colour.")
+
+        player.numStations -= 1
